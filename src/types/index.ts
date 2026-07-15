@@ -1,1 +1,3 @@
-export {};
+export interface GridCellData {
+  id: string;
+}
