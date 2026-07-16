@@ -22,7 +22,7 @@ export function Canvas() {
   useDrag(worldRef, moveBy);
 
   return (
-    <main className="relative h-dvh w-dvw overflow-hidden bg-background">
+    <main className="relative h-dvh w-dvw overflow-hidden bg-background cursor-grab active:cursor-grabbing select-none">
       <div
         ref={parallaxRef}
         className="absolute inset-0"
@@ -31,6 +31,8 @@ export function Canvas() {
         <div
           ref={worldRef}
           className="absolute bg-dot-grid"
+          onMouseDown={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
           style={{
             width: WORLD_SIZE,
             height: WORLD_SIZE,
