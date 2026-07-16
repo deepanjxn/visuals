@@ -28,6 +28,10 @@ body {
   font-family: var(--font-sans);
 }
 
+@utility transition-overlay {
+  transition: all 160ms ease-out;
+}
+
 @utility bg-dot-grid {
   background-image: radial-gradient(
     circle,
