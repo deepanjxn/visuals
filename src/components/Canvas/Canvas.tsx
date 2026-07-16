@@ -6,6 +6,7 @@ import { useDrag } from "@/hooks/useDrag";
 import { useParallax } from "@/hooks/useParallax";
 import { Grid } from "@/components/Grid/Grid";
 import { Overlay } from "@/components/Overlay/Overlay";
+import { InteractionLayer } from "@/components/InteractionLayer";
 import { WORLD_SIZE, WORLD_CENTER, getCameraStart } from "@/lib/constants";
 
 export function Canvas() {
@@ -43,6 +44,7 @@ export function Canvas() {
           <Grid worldRef={worldRef} />
         </div>
       </div>
+      <InteractionLayer worldRef={worldRef} />
       <Overlay />
     </main>
   );
