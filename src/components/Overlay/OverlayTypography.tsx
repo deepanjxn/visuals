@@ -33,16 +33,36 @@ interface KeyboardHintProps {
   letter: string;
   before: string;
   after: string;
+  href?: string;
 }
 
-export function KeyboardHint({ letter, before, after }: KeyboardHintProps) {
-  return (
-    <span className="text-foreground text-base font-normal leading-relaxed tracking-[-0.04em]">
+export function KeyboardHint({ letter, before, after, href }: KeyboardHintProps) {
+  const content = (
+    <>
       {before}
-      <span className="text-accent transition-overlay hover:opacity-80 cursor-pointer">
+      <span className="text-accent transition-overlay hover:opacity-80">
         [{letter}]
       </span>
       {after}
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-foreground text-base font-normal leading-relaxed tracking-[-0.04em] pointer-events-auto no-underline transition-overlay hover:opacity-[0.92] cursor-pointer"
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <span className="text-foreground text-base font-normal leading-relaxed tracking-[-0.04em]">
+      {content}
     </span>
   );
 }

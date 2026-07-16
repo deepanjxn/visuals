@@ -1,8 +1,14 @@
-export function OverlayGradient() {
+"use client";
+
+import { motion } from "framer-motion";
+
+export function OverlayGradient({ isInfoOpen = false }: { isInfoOpen?: boolean }) {
   return (
     <>
-      <div
-        className="fixed top-0 left-0 w-full h-[180px] pointer-events-none"
+      <motion.div
+        className="fixed top-0 left-0 w-full pointer-events-none"
+        animate={{ height: isInfoOpen ? 240 : 180 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
         style={{ background: "linear-gradient(to bottom, #191919 0%, transparent 100%)" }}
       />
       <div

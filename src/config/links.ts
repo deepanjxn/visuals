@@ -1,4 +1,3 @@
-// TODO: Replace placeholder URLs with real destinations
-export const PORTFOLIO_URL = "#";
-export const RESUME_URL = "#";
-export const CONTACT_URL = "#";
+export const PORTFOLIO_URL = "https://d-s.me";
+export const RESUME_URL = "https://drive.google.com/file/d/1ZXlLG8gkWQ4AKvzqvgp63Z1tr6ZRtpPm/view";
+export const CONTACT_URL = "https://cal.com/deepanjan/30min";
