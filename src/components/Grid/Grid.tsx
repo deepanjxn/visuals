@@ -1,11 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import {
-  WORLD_SIZE,
-  WORLD_CENTER,
-  getBreakpointValues,
-} from "@/lib/constants";
+import { WORLD_CENTER, getBreakpointValues } from "@/lib/constants";
 
 const BUFFER = 4;
 const POOL_SIZE = 800;
@@ -77,10 +73,6 @@ export function Grid({
           for (const p of paddingEls) {
             p.style.padding = `${bp.padding}px`;
           }
-          console.log(
-            `[MATRIX] vw:${vw} frameSize:${bp.frameSize} padding:${bp.padding} ` +
-            `cameraStart:${(WORLD_SIZE - bp.frameSize) / 2}`
-          );
         }
 
         const centerX = vw / 2;

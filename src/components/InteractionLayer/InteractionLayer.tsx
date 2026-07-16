@@ -2,31 +2,34 @@
 
 import { useEffect, useRef } from "react";
 
-const MIN_LENGTH = 2;
 const LERP_FACTOR = 0.2;
+const BEND_MIN = 12;
+const BEND_MAX = 40;
 
 interface InteractionLayerProps {
   worldRef: React.RefObject<HTMLElement | null>;
 }
 
 export function InteractionLayer({ worldRef }: InteractionLayerProps) {
-  const elRef = useRef<HTMLDivElement | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
     const world = worldRef.current;
-    if (!world || !elRef.current) return;
-    const el: HTMLDivElement = elRef.current;
+    if (!world || !svgRef.current) return;
+    const svg = svgRef.current;
+    const path = svg.querySelector("path")!;
+    const gradient = svg.querySelector("linearGradient")!;
 
     let isDragging = false;
     let rafId: number | null = null;
 
     let startX = 0;
     let startY = 0;
-    let targetAngle = 0;
-    let targetLength = 0;
+    let targetEndX = 0;
+    let targetEndY = 0;
 
-    let displayAngle = 0;
-    let displayLength = 0;
+    let displayEndX = 0;
+    let displayEndY = 0;
 
     function getPos(e: MouseEvent | TouchEvent) {
       if ("touches" in e) {
@@ -36,16 +39,37 @@ export function InteractionLayer({ worldRef }: InteractionLayerProps) {
     }
 
     function tick() {
-      let diff = targetAngle - displayAngle;
-      diff = Math.atan2(Math.sin(diff), Math.cos(diff));
-      displayAngle += diff * LERP_FACTOR;
+      displayEndX += (targetEndX - displayEndX) * LERP_FACTOR;
+      displayEndY += (targetEndY - displayEndY) * LERP_FACTOR;
 
-      displayLength += (targetLength - displayLength) * LERP_FACTOR;
+      const dx = displayEndX - startX;
+      const dy = displayEndY - startY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
 
-      const angleDeg = displayAngle * (180 / Math.PI);
+      if (dist < 0.5) {
+        path.setAttribute("d", "");
+        if (isDragging) {
+          rafId = requestAnimationFrame(tick);
+        }
+        return;
+      }
 
-      el.style.transform = `translate(${startX}px, ${startY - 1}px) rotate(${angleDeg}deg)`;
-      el.style.width = `${displayLength}px`;
+      const midX = (startX + displayEndX) / 2;
+      const midY = (startY + displayEndY) / 2;
+      const nx = -dy / dist;
+      const ny = dx / dist;
+      const bend = Math.max(BEND_MIN, Math.min(BEND_MAX, dist * 0.12));
+      const cpX = midX + nx * bend;
+      const cpY = midY + ny * bend;
+
+      path.setAttribute(
+        "d",
+        `M ${startX} ${startY} Q ${cpX} ${cpY} ${displayEndX} ${displayEndY}`
+      );
+      gradient.setAttribute("x1", String(startX));
+      gradient.setAttribute("y1", String(startY));
+      gradient.setAttribute("x2", String(displayEndX));
+      gradient.setAttribute("y2", String(displayEndY));
 
       if (isDragging) {
         rafId = requestAnimationFrame(tick);
@@ -57,13 +81,13 @@ export function InteractionLayer({ worldRef }: InteractionLayerProps) {
       const pos = getPos(e);
       startX = pos.x;
       startY = pos.y;
-      targetAngle = 0;
-      displayAngle = 0;
-      targetLength = 0;
-      displayLength = 0;
+      targetEndX = pos.x;
+      targetEndY = pos.y;
+      displayEndX = pos.x;
+      displayEndY = pos.y;
 
-      el.style.transition = "opacity 80ms ease-out";
-      el.style.opacity = "1";
+      svg.style.transition = "opacity 80ms ease-out";
+      svg.style.opacity = "1";
 
       if (rafId !== null) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(tick);
@@ -72,19 +96,16 @@ export function InteractionLayer({ worldRef }: InteractionLayerProps) {
     function onPointerMove(e: MouseEvent | TouchEvent) {
       if (!isDragging) return;
       const pos = getPos(e);
-      const dx = pos.x - startX;
-      const dy = pos.y - startY;
-
-      targetAngle = Math.atan2(dy, dx);
-      targetLength = Math.max(MIN_LENGTH, Math.sqrt(dx * dx + dy * dy));
+      targetEndX = pos.x;
+      targetEndY = pos.y;
     }
 
     function onPointerUp() {
       if (!isDragging) return;
       isDragging = false;
 
-      el.style.transition = "opacity 120ms ease-out";
-      el.style.opacity = "0";
+      svg.style.transition = "opacity 120ms ease-out";
+      svg.style.opacity = "0";
     }
 
     world.addEventListener("mousedown", onPointerDown);
@@ -106,23 +127,39 @@ export function InteractionLayer({ worldRef }: InteractionLayerProps) {
   }, [worldRef]);
 
   return (
-    <div
-      ref={elRef}
+    <svg
+      ref={svgRef}
       className="pointer-events-none fixed"
       style={{
         left: 0,
         top: 0,
-        width: `${MIN_LENGTH}px`,
-        height: "2px",
-        background: "#95FF63",
+        width: "100vw",
+        height: "100vh",
         opacity: 0,
-        borderRadius: "999px",
-        boxShadow: "0 0 8px rgba(149,255,99,.35)",
-        transformOrigin: "left center",
-        transform: "translate(0px, 0px) rotate(0deg)",
-        willChange: "transform, width, opacity",
+        overflow: "visible",
         zIndex: 9999,
       }}
-    />
+    >
+      <defs>
+        <linearGradient
+          id="drag-gradient"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="0"
+        >
+          <stop offset="0%" stopColor="#95FF63" stopOpacity="0" />
+          <stop offset="100%" stopColor="#95FF63" stopOpacity="1" />
+        </linearGradient>
+      </defs>
+      <path
+        d=""
+        fill="none"
+        stroke="url(#drag-gradient)"
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
