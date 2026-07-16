@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Info, X } from "lucide-react";
+import { LINKEDIN_URL } from "@/config/links";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface TopCompactOverlayProps {
@@ -24,17 +25,25 @@ export function TopCompactOverlay({ isInfoOpen, onInfoToggle }: TopCompactOverla
         style={{ overflow: "hidden" }}
       >
         <div className="flex justify-between items-start">
-          <div className="flex items-center h-12 pointer-events-auto">
-            <Image
-              src="/images/portrait.webp"
-              alt="Portrait"
-              width={40}
-              height={40}
-              className="rounded-full object-cover select-none transition-overlay hover:opacity-[0.92] cursor-pointer"
-              priority
-              draggable={false}
-              style={{ userSelect: "none" }}
-            />
+          <div className="flex items-center h-12">
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open LinkedIn profile"
+              className="pointer-events-auto"
+            >
+              <Image
+                src="/images/portrait.webp"
+                alt="Portrait"
+                width={40}
+                height={40}
+                className="rounded-full object-cover select-none transition-overlay hover:opacity-[0.92] cursor-pointer"
+                priority
+                draggable={false}
+                style={{ userSelect: "none" }}
+              />
+            </a>
           </div>
           <button
             type="button"
