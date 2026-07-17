@@ -1,10 +1,21 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { PORTFOLIO_URL, RESUME_URL, CONTACT_URL } from "@/config/links";
 import { KeyboardHint, ButtonLabel } from "./OverlayTypography";
 
-export function BottomOverlay() {
+interface BottomOverlayProps {
+  hidden?: boolean;
+}
+
+export function BottomOverlay({ hidden = false }: BottomOverlayProps) {
   return (
-    <div className="fixed bottom-[32px] left-[48px] right-[48px] flex justify-between items-center pointer-events-none">
+    <motion.div
+      className="fixed bottom-[32px] left-[48px] right-[48px] flex justify-between items-center pointer-events-none"
+      animate={hidden ? { y: 200, opacity: 0 } : { y: 0, opacity: 1 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       <KeyboardHint letter="R" before="Press " after=" View Resume" href={RESUME_URL} />
       <a
         href={PORTFOLIO_URL}
@@ -17,6 +28,6 @@ export function BottomOverlay() {
         <ArrowUpRight size={16} />
       </a>
       <KeyboardHint letter="C" before="Press " after=" To Contact" href={CONTACT_URL} />
-    </div>
+    </motion.div>
   );
 }

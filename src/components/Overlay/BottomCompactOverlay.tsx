@@ -1,11 +1,20 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Briefcase, Phone, ArrowUpRight } from "lucide-react";
 import { PORTFOLIO_URL, RESUME_URL, CONTACT_URL } from "@/config/links";
 
-export function BottomCompactOverlay() {
+interface BottomCompactOverlayProps {
+  hidden?: boolean;
+}
+
+export function BottomCompactOverlay({ hidden = false }: BottomCompactOverlayProps) {
   return (
-    <div
+    <motion.div
       className="fixed bottom-0 left-0 right-0 px-[20px] pointer-events-none"
       style={{ paddingBottom: "calc(32px + env(safe-area-inset-bottom, 0px))" }}
+      animate={hidden ? { y: 200, opacity: 0 } : { y: 0, opacity: 1 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="flex items-center justify-between pointer-events-auto">
         <a
@@ -37,6 +46,6 @@ export function BottomCompactOverlay() {
           <Phone size={20} className="text-foreground" />
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }

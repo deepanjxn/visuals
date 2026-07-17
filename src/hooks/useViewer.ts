@@ -1,3 +1,1 @@
-export function useViewer() {
-  return null;
-}
+export { InteractionProvider, useInteraction } from "./useInteraction";

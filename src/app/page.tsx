@@ -1,5 +1,5 @@
-import { Canvas } from "@/components/Canvas/Canvas";
+import { Workspace } from "./workspace";
 
 export default function Home() {
-  return <Canvas />;
+  return <Workspace />;
 }

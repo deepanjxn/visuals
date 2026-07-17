@@ -1,10 +1,21 @@
+"use client";
+
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { LINKEDIN_URL } from "@/config/links";
 import { Description } from "./OverlayTypography";
 
-export function TopOverlay() {
+interface TopOverlayProps {
+  hidden?: boolean;
+}
+
+export function TopOverlay({ hidden = false }: TopOverlayProps) {
   return (
-    <div className="fixed top-[40px] left-[48px] right-[48px] flex justify-between items-start pointer-events-none">
+    <motion.div
+      className="fixed top-[40px] left-[48px] right-[48px] flex justify-between items-start pointer-events-none"
+      animate={hidden ? { y: -200, opacity: 0 } : { y: 0, opacity: 1 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       <a
         href={LINKEDIN_URL}
         target="_blank"
@@ -26,6 +37,6 @@ export function TopOverlay() {
       <Description>
         A visual playground exploring the intersection of generative art, design and interactive experience.
       </Description>
-    </div>
+    </motion.div>
   );
 }

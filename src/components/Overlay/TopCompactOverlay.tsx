@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface TopCompactOverlayProps {
   isInfoOpen: boolean;
   onInfoToggle: () => void;
+  hidden?: boolean;
 }
 
 const descriptionVariants = {
@@ -16,9 +17,13 @@ const descriptionVariants = {
   exit: { opacity: 0, y: 8 },
 };
 
-export function TopCompactOverlay({ isInfoOpen, onInfoToggle }: TopCompactOverlayProps) {
+export function TopCompactOverlay({ isInfoOpen, onInfoToggle, hidden = false }: TopCompactOverlayProps) {
   return (
-    <div className="fixed top-[40px] left-[20px] right-[20px] pointer-events-none">
+    <motion.div
+      className="fixed top-[40px] left-[20px] right-[20px] pointer-events-none"
+      animate={hidden ? { y: -200, opacity: 0 } : { y: 0, opacity: 1 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       <motion.div
         animate={{ height: isInfoOpen ? "auto" : 48 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
@@ -85,6 +90,6 @@ export function TopCompactOverlay({ isInfoOpen, onInfoToggle }: TopCompactOverla
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

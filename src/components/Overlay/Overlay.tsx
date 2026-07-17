@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { RESUME_URL, CONTACT_URL } from "@/config/links";
+import { useInteraction } from "@/hooks/useInteraction";
 import { OverlayGradient } from "./OverlayGradient";
 import { TopOverlay } from "./TopOverlay";
 import { BottomOverlay } from "./BottomOverlay";
@@ -11,6 +12,8 @@ import { BottomCompactOverlay } from "./BottomCompactOverlay";
 export function Overlay() {
   const [isCompact, setIsCompact] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const { state } = useInteraction();
+  const isViewerActive = state === "focused";
 
   useEffect(() => {
     function checkWidth() {
@@ -52,16 +55,20 @@ export function Overlay() {
 
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
-      <OverlayGradient isInfoOpen={isInfoOpen} />
+      <OverlayGradient isInfoOpen={isInfoOpen} hidden={isViewerActive} />
       {isCompact ? (
         <>
-          <TopCompactOverlay isInfoOpen={isInfoOpen} onInfoToggle={() => setIsInfoOpen((p) => !p)} />
-          <BottomCompactOverlay />
+          <TopCompactOverlay
+            isInfoOpen={isInfoOpen}
+            onInfoToggle={() => setIsInfoOpen((p) => !p)}
+            hidden={isViewerActive}
+          />
+          <BottomCompactOverlay hidden={isViewerActive} />
         </>
       ) : (
         <>
-          <TopOverlay />
-          <BottomOverlay />
+          <TopOverlay hidden={isViewerActive} />
+          <BottomOverlay hidden={isViewerActive} />
         </>
       )}
     </div>
