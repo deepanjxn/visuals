@@ -27,12 +27,18 @@ interface InteractionContextValue {
 
 const ARTWORK_COUNT = 100;
 
+const ARTWORK_IMAGES = [
+  "/images/visuals/background.webp",
+  "/images/visuals/portrait.webp",
+  "/images/visuals/test.webp",
+];
+
 function generateArtworks(): Artwork[] {
   return Array.from({ length: ARTWORK_COUNT }, (_, i) => ({
     id: `artwork-${String(i).padStart(3, "0")}`,
     title: `Artwork ${i + 1}`,
     type: "image" as const,
-    src: "",
+    src: ARTWORK_IMAGES[i % ARTWORK_IMAGES.length],
   }));
 }
 

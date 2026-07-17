@@ -31,35 +31,36 @@ export function Viewer() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          style={{
-            backgroundColor: "rgba(0,0,0,0.5)",
-            backdropFilter: "blur(40px)",
-            WebkitBackdropFilter: "blur(40px)",
-          }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          style={{ backgroundColor: "#000000" }}
           onClick={onBackdropClick}
         >
           <motion.div
-            key="viewer-artwork"
-            className="flex items-center justify-center max-w-[90vw] max-h-[85vh]"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              boxShadow: "0 4px 40px 0 rgba(0,0,0,0.25)",
-              borderRadius: "8px",
-            }}
+            key="viewer-stage"
+            className="flex items-center justify-center"
+            style={{ width: "70vw", height: "75vh" }}
+            initial={{ scale: 0.3 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             {selectedArtwork?.src ? (
               <img
                 src={selectedArtwork.src}
                 alt={selectedArtwork.title ?? ""}
-                className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-lg"
                 draggable={false}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  width: "auto",
+                  height: "auto",
+                  objectFit: "contain",
+                  display: "block",
+                  borderRadius: "8px",
+                }}
               />
             ) : (
-              <div className="w-[60vw] max-w-[800px] aspect-[4/3] bg-surface rounded-lg flex items-center justify-center">
+              <div className="w-full h-full bg-surface rounded-lg flex items-center justify-center">
                 <span className="text-foreground/20 text-sm font-medium tracking-[-0.04em]">
                   {selectedArtwork?.title ?? "Artwork"}
                 </span>
@@ -73,7 +74,7 @@ export function Viewer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.17, ease: "easeOut", delay: 0.1 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
             onClick={close}
             aria-label="Close viewer"
           >

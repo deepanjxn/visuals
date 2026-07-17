@@ -17,20 +17,38 @@ export function Grid({
     const container = containerRef.current;
     if (!container) return;
 
+    const IMAGES = [
+      "/images/visuals/background.webp",
+      "/images/visuals/portrait.webp",
+      "/images/visuals/test.webp",
+    ];
+
     const pool: HTMLDivElement[] = [];
 
     for (let i = 0; i < POOL_SIZE; i++) {
       const cell = document.createElement("div");
       cell.style.position = "absolute";
+      cell.style.boxSizing = "border-box";
 
-      const frame = document.createElement("div");
-      frame.style.width = "100%";
-      frame.style.height = "100%";
-      frame.style.borderRadius = "8px";
-      frame.style.backgroundColor = "#363636";
-      frame.style.overflow = "hidden";
+      const wrapper = document.createElement("div");
+      wrapper.style.width = "100%";
+      wrapper.style.height = "100%";
+      wrapper.style.display = "flex";
+      wrapper.style.alignItems = "center";
+      wrapper.style.justifyContent = "center";
 
-      cell.appendChild(frame);
+      const img = document.createElement("img");
+      img.style.maxWidth = "100%";
+      img.style.maxHeight = "100%";
+      img.style.width = "auto";
+      img.style.height = "auto";
+      img.style.objectFit = "contain";
+      img.style.display = "block";
+      img.style.borderRadius = "8px";
+      img.draggable = false;
+
+      wrapper.appendChild(img);
+      cell.appendChild(wrapper);
       container.appendChild(cell);
       pool.push(cell);
     }
@@ -56,7 +74,8 @@ export function Grid({
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const bp = getBreakpointValues(vw);
-        const step = bp.frameSize + bp.gap;
+        const step = bp.frameSize;
+        const pad = bp.gap / 2;
 
         const centerX = vw / 2;
         const centerY = vh / 2;
@@ -77,10 +96,13 @@ export function Grid({
             const el = pool[idx];
             el.style.width = `${bp.frameSize}px`;
             el.style.height = `${bp.frameSize}px`;
+            el.style.padding = `${pad}px`;
             el.style.transform = `translate3d(${col * step}px, ${row * step}px, 0)`;
             el.dataset.col = String(col);
             el.dataset.row = String(row);
             el.style.display = "";
+            const imageIndex = Math.abs(col * 31 + row * 17) % IMAGES.length;
+            (el.firstChild?.firstChild as HTMLImageElement | null)!.src = IMAGES[imageIndex];
             idx++;
           }
         }
