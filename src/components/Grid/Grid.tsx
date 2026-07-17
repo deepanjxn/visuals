@@ -18,18 +18,10 @@ export function Grid({
     if (!container) return;
 
     const pool: HTMLDivElement[] = [];
-    const paddingEls: HTMLDivElement[] = [];
-    let breakpointKey = "";
 
     for (let i = 0; i < POOL_SIZE; i++) {
       const cell = document.createElement("div");
       cell.style.position = "absolute";
-      cell.style.opacity = "1";
-
-      const padding = document.createElement("div");
-      padding.style.width = "100%";
-      padding.style.height = "100%";
-      padding.style.boxSizing = "border-box";
 
       const frame = document.createElement("div");
       frame.style.width = "100%";
@@ -38,11 +30,9 @@ export function Grid({
       frame.style.backgroundColor = "#363636";
       frame.style.overflow = "hidden";
 
-      padding.appendChild(frame);
-      cell.appendChild(padding);
+      cell.appendChild(frame);
       container.appendChild(cell);
       pool.push(cell);
-      paddingEls.push(padding);
     }
 
     let rafId: number;
@@ -66,28 +56,19 @@ export function Grid({
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const bp = getBreakpointValues(vw);
-        const key = `${bp.frameSize}-${bp.padding}`;
-
-        if (key !== breakpointKey) {
-          breakpointKey = key;
-          for (const p of paddingEls) {
-            p.style.padding = `${bp.padding}px`;
-          }
-        }
+        const step = bp.frameSize + bp.gap;
 
         const centerX = vw / 2;
         const centerY = vh / 2;
 
         const colStart =
-          Math.ceil((-centerX - cx + WORLD_CENTER) / bp.frameSize) - BUFFER;
+          Math.ceil((-centerX - cx + WORLD_CENTER) / step) - BUFFER;
         const colEnd =
-          Math.floor((vw - centerX - cx + WORLD_CENTER) / bp.frameSize) +
-          BUFFER;
+          Math.floor((vw - centerX - cx + WORLD_CENTER) / step) + BUFFER;
         const rowStart =
-          Math.ceil((-centerY - cy + WORLD_CENTER) / bp.frameSize) - BUFFER;
+          Math.ceil((-centerY - cy + WORLD_CENTER) / step) - BUFFER;
         const rowEnd =
-          Math.floor((vh - centerY - cy + WORLD_CENTER) / bp.frameSize) +
-          BUFFER;
+          Math.floor((vh - centerY - cy + WORLD_CENTER) / step) + BUFFER;
 
         let idx = 0;
         for (let col = colStart; col <= colEnd; col++) {
@@ -96,7 +77,7 @@ export function Grid({
             const el = pool[idx];
             el.style.width = `${bp.frameSize}px`;
             el.style.height = `${bp.frameSize}px`;
-            el.style.transform = `translate3d(${col * bp.frameSize}px, ${row * bp.frameSize}px, 0)`;
+            el.style.transform = `translate3d(${col * step}px, ${row * step}px, 0)`;
             el.dataset.col = String(col);
             el.dataset.row = String(row);
             el.style.display = "";
@@ -109,7 +90,6 @@ export function Grid({
           delete pool[i].dataset.col;
           delete pool[i].dataset.row;
         }
-
       }
 
       rafId = requestAnimationFrame(tick);

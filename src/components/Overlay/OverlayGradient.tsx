@@ -17,13 +17,13 @@ export function OverlayGradient({ isInfoOpen = false, hidden = false }: OverlayG
           opacity: hidden ? 0 : 1,
         }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        style={{ background: "linear-gradient(to bottom, #191919 0%, transparent 100%)" }}
+        style={{ background: "linear-gradient(to bottom, #000000 0%, transparent 100%)" }}
       />
       <motion.div
         className="fixed bottom-0 left-0 w-full h-[220px] pointer-events-none"
         animate={{ opacity: hidden ? 0 : 1 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        style={{ background: "linear-gradient(to top, #191919 0%, transparent 100%)" }}
+        style={{ background: "linear-gradient(to top, #000000 0%, transparent 100%)" }}
       />
     </>
   );
