@@ -75,7 +75,7 @@ export function Grid({
         const vh = window.innerHeight;
         const bp = getBreakpointValues(vw);
         const step = bp.frameSize;
-        const pad = bp.gap / 2;
+        const pad = bp.frameSize * 0.15;
 
         const centerX = vw / 2;
         const centerY = vh / 2;
